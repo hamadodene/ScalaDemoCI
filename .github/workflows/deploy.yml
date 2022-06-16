@@ -33,4 +33,4 @@ jobs:
       - name: Adding Known Hosts
         run: ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
       - name: Deploy with rsync
-        run: rsync -avz --rsync-path="mkdir -p ${{DEPLOY_PATH}}20.0 && rsync" ./app/build/libs/*.jar ${{ secrets.USERNAME }}@${{ secrets.HOST }}:${{DEPLOY_PATH}}20.0
+        run: rsync -avz --rsync-path="mkdir -p ${{ secrets.DEPLOY_PATH}}20.0 && rsync" ./app/build/libs/*.jar ${{ secrets.USERNAME }}@${{ secrets.HOST }}:${{ secrets.DEPLOY_PATH }}20.0
