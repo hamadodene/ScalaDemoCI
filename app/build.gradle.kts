@@ -12,7 +12,11 @@ plugins {
 
     // Apply the application plugin to add support for building a CLI application in Java.
     application
+    id("com.glovoapp.semantic-versioning") version  "1.1.8"
+
 }
+
+version = project.version
 
 repositories {
     // Use Maven Central for resolving dependencies.
@@ -34,6 +38,14 @@ dependencies {
     // Need scala-xml at test runtime
     testRuntimeOnly("org.scala-lang.modules:scala-xml_2.13:1.2.0")
 }
+
+
+task("printVersion") {
+    doLast {
+        println("The project current version is ${project.semanticVersion.version.get()}")
+    }
+}
+
 
 application {
     // Define the main class for the application.
