@@ -23,19 +23,28 @@ jobs:
           cache: gradle
       - name: Generate jar with all dependencies
         run: ./gradlew build
+      - name: Check if release alread exist
+        id: getByTag
+        uses: cardinalby/git-get-release-action@v1
+        env:
+           GITHUB_TOKEN: ${{ github.token }}
+        with:
+          tag: ${{ env.RELEASE_VERSION }}
+          doNotFailIfNotFound: true
       - name: Create release
+        if: steps.getByTag.outputs.id != ${{ env.RELEASE_VERSION }}
         uses: marvinpinto/action-automatic-releases@latest
         with:
           repo_token: ${{ secrets.ACCESS_TOKEN }}
           prerelease: false
           files: |
-            ./app/build/libs/*.jar
-        continue-on-error: true
-      - name: "Check if release already exist"
-        if: steps.release.resource == 'Release' && steps.release.code == 'already_exists' && steps.release.field == 'tag_name'
-        uses: johnwbyrd/update-release@v1.0.0
+            ./app/build/libs/*all.jar
+      - name: Upload jar file on release already exist
+        if: steps.getByTag.outputs.id == ${{ env.RELEASE_VERSION }}
+        uses: svenstaro/upload-release-action@2.3.0
         with:
-          token: ${{ secrets.ACCESS_TOKEN }}
-          files: ./app/build/libs/*all.jar
+          repo_token: ${{ secrets.ACCESS_TOKEN }}
+          file: ./app/build/libs/*all.jar
+          asset_name: ${{ matrix.asset_name }}
       - name: 'Remove Snapshots Before Caching'
         run: find ./app/build/libs/ -name *.jar | xargs rm -Rf
