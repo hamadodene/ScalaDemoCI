@@ -27,10 +27,12 @@ jobs:
         id: getByTag
         uses: cardinalby/git-get-release-action@v1
         env:
-           GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ github.token }}
         with:
           tag: ${{ env.RELEASE_VERSION }}
           doNotFailIfNotFound: true
+        run: |
+          echo "Result of get tag ${{steps.getByTag.outputs.id}}"
       - name: Create release
         if: steps.getByTag.outputs.id != ${{ env.RELEASE_VERSION }}
         uses: marvinpinto/action-automatic-releases@latest
@@ -40,7 +42,7 @@ jobs:
           files: |
             ./app/build/libs/*all.jar
       - name: Upload jar file on release already exist
-        if: steps.getByTag.outputs.id == ${{ env.RELEASE_VERSION }}
+        if: steps.getByTag.outputs.id !=
         uses: svenstaro/upload-release-action@2.3.0
         with:
           repo_token: ${{ secrets.ACCESS_TOKEN }}
