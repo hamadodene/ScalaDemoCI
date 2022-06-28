@@ -6,7 +6,8 @@
  * User Manual available at https://docs.gradle.org/7.3.3/userguide/building_java_projects.html
  */
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import org.apache.tools.ant.taskdefs.condition.Os
+import org.gradle.internal.os.OperatingSystem
+
 
 plugins {
     // Apply the scala Plugin to add support for Scala.
@@ -33,11 +34,11 @@ tasks.jar {
 
 tasks {
     named<ShadowJar>("shadowJar") {
-        if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+        if (OperatingSystem.current().isWindows) {
             archiveBaseName.set("towerdefense-windows")
-        } else if(Os.isFamily(Os.FAMILY_UNIX)) {
+        } else if(OperatingSystem.current().isLinux) {
             archiveBaseName.set("towerdefense-unix")
-        } else if(Os.isFamily(Os.FAMILY_MAC)) {
+        } else if(OperatingSystem.current().isMacOsX) {
             archiveBaseName.set("towerdefense-mac")
         } else {
             archiveBaseName.set("towerdefense-other")

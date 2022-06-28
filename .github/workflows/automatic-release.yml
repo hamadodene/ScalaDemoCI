@@ -2,7 +2,7 @@ name: "Create Automatic Release after tag created"
 on:
   push:
     tags:
-      - "v*"
+      - "v[0-9]+.[0-9]+.[0-9]+"
 jobs:
   release:
     name: Release
@@ -23,31 +23,9 @@ jobs:
           cache: gradle
       - name: Generate jar with all dependencies
         run: ./gradlew build
-      - name: Check if release alread exist
-        id: getByTag
-        uses: cardinalby/git-get-release-action@v1
+      - name: Release
+        uses: softprops/action-gh-release@v0.1.14
+        with:
+          files: ./app/build/libs/*all.jar
         env:
-          GITHUB_TOKEN: ${{ github.token }}
-        with:
-          tag: ${{ env.RELEASE_VERSION }}
-          doNotFailIfNotFound: true
-      - name: Print output
-        run: |
-          echo "Result of get tag ${{steps.getByTag.outputs.id}}"
-      - name: Create release
-        if: steps.getByTag.outputs.id != ${{ env.RELEASE_VERSION }}
-        uses: marvinpinto/action-automatic-releases@latest
-        with:
-          repo_token: ${{ secrets.ACCESS_TOKEN }}
-          prerelease: false
-          files: |
-            ./app/build/libs/*all.jar
-      - name: Upload jar file on release already exist
-        if: steps.getByTag.outputs.id == ${{ env.RELEASE_VERSION }}
-        uses: svenstaro/upload-release-action@2.3.0
-        with:
-          repo_token: ${{ secrets.ACCESS_TOKEN }}
-          file: ./app/build/libs/*all.jar
-          asset_name: ${{ matrix.asset_name }}
-      - name: 'Remove Snapshots Before Caching'
-        run: find ./app/build/libs/ -name *.jar | xargs rm -Rf
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
