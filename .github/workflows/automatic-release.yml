@@ -33,7 +33,7 @@ jobs:
             continue-on-error: true
       - name: "Check if release already exist"
         if: steps.release.resource == 'Release' && steps.release.code == 'already_exists' && steps.release.field == 'tag_name'
-        uses: johnwbyrd/update-release@v1
+        uses: johnwbyrd/update-release@v1.0.0
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
           files: ./app/build/libs/*all.jar
