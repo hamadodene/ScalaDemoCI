@@ -31,6 +31,7 @@ jobs:
         with:
           tag: ${{ env.RELEASE_VERSION }}
           doNotFailIfNotFound: true
+      - name: Print output
         run: |
           echo "Result of get tag ${{steps.getByTag.outputs.id}}"
       - name: Create release
