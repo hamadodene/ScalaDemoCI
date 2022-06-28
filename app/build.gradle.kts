@@ -13,10 +13,44 @@ plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     application
     id("com.glovoapp.semantic-versioning") version  "1.1.8"
-
+    id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 version = project.version
+
+tasks.jar {
+    manifest {
+        attributes(mapOf(
+                "Implementation-Title" to project.name,
+                "Implementation-Version" to project.version,
+                "Main-Class" to "App")
+        )
+    }
+    project.setProperty("archivesBaseName", "towerdefense")
+}
+
+tasks {
+    named<ShadowJar>("shadowJar") {
+        if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+            archiveBaseName.set("towerdefense-windows")
+        } else if(Os.isFamily(Os.FAMILY_UNIX)) {
+            archiveBaseName.set("towerdefense-unix")
+        } else if(Os.isFamily(Os.FAMILY_MAC)) {
+            archiveBaseName.set("towerdefense-mac")
+        } else {
+            archiveBaseName.set("towerdefense-other")
+        }
+        manifest {
+            attributes(mapOf("Main-Class" to "View.GameLauncher"))
+        }
+    }
+}
+
+tasks {
+    build {
+        dependsOn(shadowJar)
+    }
+}
 
 repositories {
     // Use Maven Central for resolving dependencies.
