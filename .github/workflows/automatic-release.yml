@@ -25,6 +25,8 @@ jobs:
         with:
           repo_token: ${{ secrets.ACCESS_TOKEN }}
           prerelease: false
+          title: ${{ env.RELEASE_VERSION }}
+          automatic_release_tag: "latest"
           files: |
             ./app/build/libs/*.jar
       - name: 'Remove Snapshots Before Caching'
