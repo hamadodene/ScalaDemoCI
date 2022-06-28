@@ -30,5 +30,12 @@ jobs:
           prerelease: false
           files: |
             ./app/build/libs/*.jar
+            continue-on-error: true
+      - name: "Check if release already exist"
+        if: steps.release.resource == 'Release' && steps.release.code == 'already_exists' && steps.release.field == 'tag_name'
+        uses: johnwbyrd/update-release@v1
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+          files: ./app/build/libs/*all.jar
       - name: 'Remove Snapshots Before Caching'
         run: find ./app/build/libs/ -name *.jar | xargs rm -Rf
