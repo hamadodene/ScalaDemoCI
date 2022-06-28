@@ -19,7 +19,7 @@ jobs:
           distribution: 'temurin'
           cache: gradle
       - name: Generate jar with all dependencies
-        run: ./gradlew buid
+        run: ./gradlew build
       - name: Create release
         uses: marvinpinto/action-automatic-releases@latest
         with:
