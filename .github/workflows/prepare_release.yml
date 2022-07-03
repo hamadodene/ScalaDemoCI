@@ -18,7 +18,7 @@ jobs:
         uses: WyriHaximus/github-action-get-previous-tag@v1
         id: previoustag
         with:
-          fallback: ${{ steps.tagName.outputs.tag }}
+          fallback: 1.0.0
       - name: Compare semantic version
         uses: tj-actions/semver-diff@v2.0.0
         id: comparesv
@@ -53,4 +53,4 @@ jobs:
           delete-branch: true
           title: Prepare for next release
           draft: false
-          base: main
+          base: master
