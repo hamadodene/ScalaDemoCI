@@ -11,22 +11,11 @@ jobs:
       release_type: ${{ steps.releaseType.outputs.release_type }}
     steps:
       - uses: actions/checkout@v3
-      - name: Get tag name
-        uses: olegtarasov/get-tag@v2.1
-        id: tagName
-      - name: Get previous tag version
-        uses: WyriHaximus/github-action-get-previous-tag@v1
-        id: previoustag
-        with:
-          fallback: 1.0.0
       - name: Compare semantic version
         uses: tj-actions/semver-diff@v2.0.0
         id: comparesv
-      - name: Compare version
-        run: echo "Compare result is ${{ steps.comparesv.outputs.release_type }}"
-      - name: Check if minor, patch, prelease or build release
+      - name: Set output for job
         id: releaseType
-        if: (${{ steps.comparesv.outputs.release_type }} != major || ${{ steps.tagName.outputs.tag }} == ${{ steps.previoustag.outputs.tag }})
         run: echo "::set-output name=release_type::${{ steps.comparesv.outputs.release_type }}"
 
   next-release:
