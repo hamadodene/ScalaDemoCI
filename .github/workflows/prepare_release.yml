@@ -32,8 +32,8 @@ jobs:
   next-release:
     name: Next release prepare
     needs: svcheck
-    if:  ${{needs.svcheck.outputs.release_type}} == 'major'
     runs-on: ubuntu-latest
+    if: needs.svcheck.outputs.release_type == 'major'
     steps:
       - uses: actions/checkout@v3
       - uses: gradle/wrapper-validation-action@v1
